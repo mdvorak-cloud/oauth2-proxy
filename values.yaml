@@ -14,11 +14,14 @@ fullnameOverride: ""
 # NOTE Don't specify http_address, as it is passed as command-line
 config: { }
 # client_id: "123456"
+# reverse_proxy: false
+# upstreams: [ "http://example.com" ]
 
+# Configuration file sensitive contents, merged with values specified in config key
 # You are responsible for creating this secret
 secretName: "" # Defaults to full deployment name
 
-# If specified, provided as --authenticated-emails-file parameter
+# If specified, it is provided as an authenticated_emails_file parameter
 authenticatedEmails: [ ]
 # - myemail@example.com
 
@@ -62,7 +65,7 @@ ingress:
   #      - chart-example.local
 
 resources: { }
-  # We usually recommend not to specify default resources and to leave this as a conscious
+# We usually recommend not to specify default resources and to leave this as a conscious
 # choice for the user. This also increases chances charts run on environments with little
 # resources, such as Minikube. If you do want to specify resources, uncomment the following
 # lines, adjust them as necessary, and remove the curly braces after 'resources:'.

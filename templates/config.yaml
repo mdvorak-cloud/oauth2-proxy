@@ -5,8 +5,13 @@ metadata:
   labels:
   {{- include "oauth2-proxy.labels" . | nindent 4 }}
 data:
-  {{- .Values.config | toYaml | nindent 2 }}
-  {{- if .Values.authenticatedEmails -}}
+  {{- range $key, $value := .Values.config }}
+  {{ $key }}: |
+    {{- $value | toJson | nindent 4 }}
+  {{- end }}
+  {{- if .Values.authenticatedEmails }}
   __authenticated_emails: |
-    {{ .Values.authenticatedEmails | nindent 4 }}
+    {{- range $e := .Values.authenticatedEmails }}
+    {{- $e | nindent 4 }}
     {{- end }}
+  {{- end }}
