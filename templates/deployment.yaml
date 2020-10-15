@@ -56,12 +56,20 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /ping
               port: http
+              scheme: HTTP
+            initialDelaySeconds: 0
+            timeoutSeconds: 1
           readinessProbe:
             httpGet:
-              path: /
+              path: /ping
               port: http
+              scheme: HTTP
+            initialDelaySeconds: 0
+            timeoutSeconds: 1
+            successThreshold: 1
+            periodSeconds: 10
           resources:
           {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
