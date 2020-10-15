@@ -1,0 +1,6 @@
+*~
+*.iml
+.idea/
+.vagrant/
+.vm/
+__pycache__/
