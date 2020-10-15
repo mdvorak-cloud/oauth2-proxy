@@ -19,6 +19,7 @@ config: { }
 
 # Configuration file sensitive contents, merged with values specified in config key
 # You are responsible for creating this secret
+# NOTE when secret is changed, pod is not automatically reloaded
 secretName: "" # Defaults to full deployment name
 
 # If specified, it is provided as an authenticated_emails_file parameter
