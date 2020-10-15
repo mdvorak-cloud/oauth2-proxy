@@ -33,7 +33,7 @@ spec:
             - sh
             - -c
             - |
-              for f in /source/*; do
+              for f in /source/config/* /source/secret/*; do
                 if [ "`basename $f`" != "__authenticated_emails" ]; then
                   echo "`basename $f` = `cat $f`" >> /etc/oauth2-proxy/oauth2-proxy.cfg
                 else
@@ -45,9 +45,9 @@ spec:
           volumeMounts:
             - mountPath: /etc/oauth2-proxy
               name: data
-            - mountPath: /source
+            - mountPath: /source/config
               name: config
-            - mountPath: /source
+            - mountPath: /source/secret
               name: secret
       containers:
         - args:
