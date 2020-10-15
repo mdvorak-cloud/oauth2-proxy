@@ -12,14 +12,14 @@ fullnameOverride: ""
 
 # Configuration file contents, see https://github.com/oauth2-proxy/oauth2-proxy/blob/master/contrib/oauth2-proxy.cfg.example
 # NOTE Don't specify http_address, as it is passed as command-line
-config: ""
-#  client_id = "123456"
-#  reverse_proxy = false
-#  upstreams = [ "http://example.com" ]
+config: { }
+# client_id: "123456"
+# reverse_proxy: false
+# upstreams: [ "http://example.com" ]
 
-# Configuration file sensitive contents, appended to config
-# It must contain key oauth2-proxy.cfg
-# You are responsible for creating this secret
+# Configuration file sensitive contents, merged with values specified in config key.
+# You are responsible for creating this secret.
+# Only simple string values are supported.
 # NOTE when secret is changed, pod is not automatically reloaded
 secretName: "" # Defaults to full deployment name
 
