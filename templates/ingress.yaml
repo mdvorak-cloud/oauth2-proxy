@@ -1,5 +1,6 @@
 {{- if .Values.ingress.enabled -}}
   {{- $fullName := include "oauth2-proxy.fullname" . -}}
+  {{- $ingressPath := .Values.ingress.path -}}
   {{- $svcPort := .Values.service.port -}}
   {{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1beta1
@@ -30,15 +31,24 @@ spec:
   {{- end }}
   {{- end }}
   rules:
+    {{- if .Values.ingress.hosts  }}
     {{- range .Values.ingress.hosts }}
-    - host: {{ .host | quote }}
+    - host: {{ . }}
       http:
         paths:
-          {{- range .paths }}
-          - path: {{ . }}
+          - path: {{ $ingressPath }}
             backend:
               serviceName: {{ $fullName }}
               servicePort: {{ $svcPort }}
     {{- end }}
+    {{- else }}
+    - http:
+        paths:
+          - backend:
+              serviceName: {{ $fullName }}
+              servicePort: {{ $svcPort }}
+            {{- if $ingressPath }}
+            path: {{ $ingressPath }}
   {{- end }}
+  {{- end -}}
   {{- end }}

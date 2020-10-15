@@ -58,9 +58,9 @@ ingress:
   className: ""
   annotations: { }
   # kubernetes.io/tls-acme: "true"
+  path: /
   hosts:
-    - host: chart-example.local
-      paths: [ ]
+    - chart-example.local
   tls: [ ]
   #  - secretName: chart-example-tls
   #    hosts:
