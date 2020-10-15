@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "oauth2-proxy.fullname" . }}
+  labels:
+  {{- include "oauth2-proxy.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+  {{- include "oauth2-proxy.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+    {{- include "oauth2-proxy.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "oauth2-proxy.serviceAccountName" . }}
+      securityContext:
+      {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: config
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              for f in /source/*; do
+                if [ "`basename $f`" != "__authenticated_emails" ]; then
+                  echo "`basename $f` = `cat $f`" >> /etc/oauth2-proxy/oauth2-proxy.cfg
+                else
+                  # NOTE hack-ish way to support inline authenticated email list in config
+                  cat $f > /etc/oauth2-proxy/authenticated-emails.txt
+                  echo "authenticated_emails_file = /etc/oauth2-proxy/authenticated-emails.txt" >> /etc/oauth2-proxy/oauth2-proxy.cfg
+                fi
+              done
+          volumeMounts:
+            - mountPath: /etc/oauth2-proxy
+              name: data
+            - mountPath: /source
+              name: config
+            - mountPath: /source
+              name: secret
+      containers:
+        - args:
+            - --http-address=0.0.0.0:4180
+            - --config=/etc/oauth2-proxy/oauth2-proxy.cfg
+          name: {{ .Chart.Name }}
+          securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: /etc/oauth2-proxy
+              name: data
+              readOnly: true
+      volumes:
+        - name: data
+          emptyDir: { }
+        - name: config
+          configMap:
+            name: {{ include "oauth2-proxy.fullname" . }}
+        - name: secret
+          secret:
+            secretName: {{ .Values.secretName | default (include "oauth2-proxy.fullname" .) }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+  {{- toYaml . | nindent 8 }}
+  {{- end }}
