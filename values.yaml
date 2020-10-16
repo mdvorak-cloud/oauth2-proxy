@@ -39,15 +39,15 @@ serviceAccount:
 podAnnotations: { }
 
 podSecurityContext:
-  fsGroup: 2000
+#  fsGroup: 2000
 
 securityContext:
-  capabilities:
-    drop:
-      - ALL
-  readOnlyRootFilesystem: true
-  runAsNonRoot: true
-  runAsUser: 2000
+#  capabilities:
+#    drop:
+#      - ALL
+#  readOnlyRootFilesystem: true
+#  runAsNonRoot: true
+#  runAsUser: 2000
 
 service:
   type: ClusterIP
@@ -57,7 +57,7 @@ ingress:
   enabled: false
   className: ""
   annotations: { }
-  # kubernetes.io/tls-acme: "true"
+  #  kubernetes.io/tls-acme: "true"
   path: /
   hosts:
     - chart-example.local
