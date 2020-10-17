@@ -15,8 +15,3 @@ for f in /source/secret/* ; do
   # quote values as strings
   echo "$(basename "$f") = \"$(cat "$f")\"" >> "$out"
 done
-
-# TODO debug
-echo "$out"
-cat "$out"
-echo "---"
