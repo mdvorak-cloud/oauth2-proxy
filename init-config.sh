@@ -16,4 +16,6 @@ for f in /source/secret/* ; do
 done
 
 # TODO debug
+echo "$out"
 cat "$out"
+echo "---"
