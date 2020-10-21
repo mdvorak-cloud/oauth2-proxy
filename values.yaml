@@ -21,7 +21,7 @@ config: { }
 # You are responsible for creating this secret.
 # Only simple string values are supported.
 # NOTE when secret is changed, pod is not automatically reloaded
-secretName: "" # Defaults to full deployment name
+configSecretName: "" # Defaults to full deployment name
 
 # If specified, it is provided as an authenticated_emails_file parameter
 authenticatedEmails: [ ]

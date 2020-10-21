@@ -84,7 +84,7 @@ spec:
             name: {{ include "oauth2-proxy.fullname" . }}
         - name: secret
           secret:
-            secretName: {{ .Values.secretName | default (include "oauth2-proxy.fullname" .) }}
+            secretName: {{ .Values.configSecretName | default (include "oauth2-proxy.fullname" .) }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
       {{- toYaml . | nindent 8 }}
