@@ -83,3 +83,13 @@ nodeSelector: { }
 tolerations: [ ]
 
 affinity: { }
+
+extraObjects: [ ]
+#  - apiVersion: bitnami.com/v1alpha1
+#    kind: SealedSecret
+#    metadata:
+#      name: oauth2-proxy
+#    spec:
+#      encryptedData:
+#        client_secret: ...
+#        cookie_secret: ...
