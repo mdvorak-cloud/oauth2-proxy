@@ -1,0 +1,38 @@
+name: Update Image
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  chart:
+    name: Update Chart
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Read version from Dockerfile
+        id: dockerfile
+        run: |-
+          TAG=$(grep FROM Dockerfile | cut -d':' -f2)
+          echo "Found tag $TAG"
+          echo "::set-output name=tag::$TAG"
+      
+      - name: Write to Chart.yaml
+        run: yq -i '.appVersion=strenv(APP_VERSION)' Chart.yaml
+        env:
+          APP_VERSION: ${{ steps.dockerfile.outputs.tag }}
+      
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          title: "fix(deps): bump appVersion to ${{ steps.dockerfile.outputs.tag }}"
+          commit-message: "fix(deps): bump appVersion to ${{ steps.dockerfile.outputs.tag }}"
+          body: "Updated Chart.yaml with new appVersion"
+          branch: dependency--${{ github.ref_name }}
+          delete-branch: true
+          labels: bot,dependency,docker
