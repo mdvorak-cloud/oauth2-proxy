@@ -3,4 +3,4 @@ name: oauth2-proxy
 description: A Helm chart for oauth2-proxy
 type: application
 version: 0.0.0
-appVersion: v6.1.1
+appVersion: v7.3.0
